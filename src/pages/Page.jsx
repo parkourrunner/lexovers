@@ -101,7 +101,7 @@ const Page = () => {
   const [currentItem, setCurrentItem] = useState({});
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
-  // const { speak } = useSpeechSynthesis();
+  const [voices, setVoices] = useState();
   const navigate = useNavigate();
   const path = useLocation();
   const id = Number(path.pathname.split("/")[2]);
@@ -141,28 +141,21 @@ const Page = () => {
 
   const handleCloseVideoModal = () => setShowVideoModal(false);
   const handleCloseGalleryModal = () => setShowGalleryModal(false);
+  speechSynthesis.onvoiceschanged = () => {
+    setVoices(speechSynthesis.getVoices());
+  }
   const speechHandler = () => {
-    const voices = window.speechSynthesis.getVoices();
-    let voice;
-    if (voices.find((k) => k.name === "Google русский")) {
-      voice = voices.find((k) => k.name === "Google русский");
-    } else if (
-      voices.find((k) => k.name === "Microsoft Pavel - Russian (Russia)")
-    ) {
-      voice = voices.find(
-        (k) => k.name === "Microsoft Pavel - Russian (Russia)"
-      );
-    } else if (
-      voices.find((k) => k.name === "Microsoft Irina - Russian (Russia)")
-    ) {
-      voice = voices.find(
-        (k) => k.name === "Microsoft Irina - Russian (Russia)"
-      );
-    } else {
+    const russians = voices.filter(v => v.lang === "ru-RU");
+    if (russians.length === 0) {
       alert("مرورگر شما از هیچ کدام از گویندگان روس زبان پشتیبانی نمی کند.");
       return;
     }
-    // speak({ text: currentItem.ruName, voice: voice });
+    const voice = russians[Math.round(Math.random() * (russians.length - 1))];
+    const U = new SpeechSynthesisUtterance()
+    U.text = currentItem.ruName;
+    U.voice = voice;
+    U.lang = voice.lang;
+    speechSynthesis.speak(U);
   };
 
   return (
