@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-// import QRCode from "react-qr-code";
+import QRCode from "react-qr-code";
 
 const Container = styled.div`
   width: 150px;
@@ -14,7 +14,7 @@ const Container = styled.div`
 const QR = () => {
   return (
     <Container>
-      {/* <QRCode size={100} value={window.location.href} /> */}
+      <QRCode size={100} value={window.location.href} />
     </Container>
   );
 };
