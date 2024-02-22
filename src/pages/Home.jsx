@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card.jsx";
-import data from "../data/dataMap-v2.js";
-
+import rawdata from "../data/dataMap-v2.js";
+import axios from "axios";
 const Container = styled.div`
   padding: 48px;
 `;
@@ -61,12 +61,28 @@ const Ul = styled.ul`
 const Home = () => {
   const [q, setQ] = useState("");
   const [filtereData, setFilteredData] = useState([]);
+  const [data, seData] = useState([]);
+  const featchWords = async () => {
+    try {
+      let words = await axios.get("http://localhost:5000/api/words");
+      seData(words?.data);
+    } catch (error) {
+      seData(rawdata);
+    }
+  }
+
   useEffect(() => {
-    const result = data.filter(
+    featchWords();
+  }, []);
+
+
+  useEffect(() => {
+    const result = data?.filter(
       (item) => item.faName.indexOf(q) !== -1 || item.ruName.indexOf(q) !== -1
-    );
+    ) || [];
     setFilteredData(result);
-  }, [q]);
+  }, [q, data]);
+
 
   return (
     <Container>
@@ -76,7 +92,7 @@ const Home = () => {
         </SearchWrapper>
         <ResultWrapper>
           <Ul>
-            {filtereData.map((item) => {
+            {filtereData && filtereData.map((item) => {
               return <Card key={item.id} item={item} />;
             })}
           </Ul>
