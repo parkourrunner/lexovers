@@ -64,7 +64,7 @@ const Home = () => {
   const [data, seData] = useState([]);
   const featchWords = async () => {
     try {
-      let words = await axios.get("http://localhost:5000/api/words");
+      let words = await axios.get("http://185.237.15.89:5000/api/words");
       seData(words?.data);
     } catch (error) {
       seData(rawdata);
