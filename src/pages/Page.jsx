@@ -184,7 +184,7 @@ const Page = () => {
           dangerouslySetInnerHTML={{ __html: currentItem.description }}
         ></span>
       </DescWrapper>
-      <GalleryIconsWrapper>
+      {/* <GalleryIconsWrapper>
         {currentItem.imgSrc && currentItem.imgSrc.length !== 0 && (
           <>
             <GalleryButton onClick={openGalleryModal}>
@@ -229,7 +229,7 @@ const Page = () => {
             </Modal>
           </>
         )}
-      </GalleryIconsWrapper>
+      </GalleryIconsWrapper> */}
       <NavigationWrapper>
         <Button data-change="1" onClick={handleClick}>
           بعدی
