@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import data from "../data/dataMap-v2.js";
+// import data from "../data/dataMap-v2.js";
 import speakerImg from "../img/speaker.png";
-import videoImg from "../img/video.png";
-import galleryImg from "../img/gallery.png";
-import Modal from "react-bootstrap/Modal";
-import { Carousel } from "react-bootstrap";
+// import videoImg from "../img/video.png";
+// import galleryImg from "../img/gallery.png";
+// import Modal from "react-bootstrap/Modal";
+// import { Carousel } from "react-bootstrap";
 // import { useSpeechSynthesis } from "react-speech-kit";
+import dataContext from "../context/data.context.js";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -41,34 +43,34 @@ const DescWrapper = styled.div`
   margin-top: 48px;
 `;
 
-const GalleryIconsWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-`;
+// const GalleryIconsWrapper = styled.div`
+//   width: 100%;
+//   display: flex;
+//   justify-content: end;
+//   align-items: center;
+// `;
 
-const VideoButton = styled.button`
-  padding: 6px 12px;
-  background: transparent;
-  border: none;
-`;
+// const VideoButton = styled.button`
+//   padding: 6px 12px;
+//   background: transparent;
+//   border: none;
+// `;
 
-const VideoImg = styled.img`
-  vertical-align: middle;
-  cursor: pointer;
-`;
+// const VideoImg = styled.img`
+//   vertical-align: middle;
+//   cursor: pointer;
+// `;
 
-const GalleryButton = styled.button`
-  padding: 6px 12px;
-  background: transparent;
-  border: none;
-`;
+// const GalleryButton = styled.button`
+//   padding: 6px 12px;
+//   background: transparent;
+//   border: none;
+// `;
 
-const GalleryImg = styled.img`
-  vertical-align: middle;
-  cursor: pointer;
-`;
+// const GalleryImg = styled.img`
+//   vertical-align: middle;
+//   cursor: pointer;
+// `;
 
 const NavigationWrapper = styled.div`
   display: flex;
@@ -99,33 +101,48 @@ const Button = styled.button`
 
 const Page = () => {
   const [currentItem, setCurrentItem] = useState({});
-  const [showVideoModal, setShowVideoModal] = useState(false);
-  const [showGalleryModal, setShowGalleryModal] = useState(false);
+  const { data, updateData } = useContext(dataContext);
+  // const [showVideoModal, setShowVideoModal] = useState(false);
+  // const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [voices, setVoices] = useState();
   const navigate = useNavigate();
   const path = useLocation();
   const id = Number(path.pathname.split("/")[2]);
+  if (!id) {
+    navigate("/");
+  }
 
   useEffect(() => {
-    if (!id) {
-      navigate("/");
+    const fetchWord = async () => {
+      const response = await axios("http://185.237.15.89:5000/api/words/" + id);
+      if (response?.data) {
+        setCurrentItem(response?.data)
+        updateData([...data, response.data])
+      } else {
+        navigate("/");
+      }
     }
-    setCurrentItem(data.filter((item) => item.id === id)[0]);
-
-    if (!currentItem) {
-      navigate("/");
+    if (data?.length > 0) {
+      const foundWord = data.filter((item) => item.id === id)[0];
+      if (foundWord) {
+        setCurrentItem(foundWord);
+      } else {
+        fetchWord();
+      }
+    } else {
+      fetchWord();
     }
-  }, [id, navigate, currentItem]);
+  }, [data, id, navigate]);
 
-  const openGalleryModal = (e) => {
-    e.preventDefault();
-    setShowGalleryModal(true);
-  };
+  // const openGalleryModal = (e) => {
+  //   e.preventDefault();
+  //   setShowGalleryModal(true);
+  // };
 
-  const openVideoModal = (e) => {
-    e.preventDefault();
-    setShowVideoModal(true);
-  };
+  // const openVideoModal = (e) => {
+  //   e.preventDefault();
+  //   setShowVideoModal(true);
+  // };
 
   global.goToPage = (pageId) => {
     navigate(`/page/${pageId}`);
@@ -139,8 +156,8 @@ const Page = () => {
     }
   };
 
-  const handleCloseVideoModal = () => setShowVideoModal(false);
-  const handleCloseGalleryModal = () => setShowGalleryModal(false);
+  // const handleCloseVideoModal = () => setShowVideoModal(false);
+  // const handleCloseGalleryModal = () => setShowGalleryModal(false);
   speechSynthesis.onvoiceschanged = () => {
     setVoices(speechSynthesis.getVoices());
   }

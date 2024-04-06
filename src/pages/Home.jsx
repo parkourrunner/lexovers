@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import Card from "../components/Card.jsx";
 import rawdata from "../data/dataMap-v2.js";
 import axios from "axios";
+import dataContext from "../context/data.context.js";
+
 const Container = styled.div`
   padding: 48px;
 `;
@@ -61,18 +63,20 @@ const Ul = styled.ul`
 const Home = () => {
   const [q, setQ] = useState("");
   const [filtereData, setFilteredData] = useState([]);
-  const [data, seData] = useState([]);
-  const featchWords = async () => {
-    try {
-      let words = await axios.get("http://185.237.15.89:5000/api/words");
-      seData(words?.data);
-    } catch (error) {
-      seData(rawdata);
-    }
-  }
+  const { data, updateData } = useContext(dataContext);
+  // const [data, seData] = useState([]);
+  
 
   useEffect(() => {
-    featchWords();
+    const fetchWord = async () => {
+      try {
+        let words = await axios.get("http://185.237.15.89:5000/api/words");
+        updateData(words?.data);
+      } catch (error) {
+        updateData(rawdata);
+      }
+    };
+    fetchWord();
   }, []);
 
 

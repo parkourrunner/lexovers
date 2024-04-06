@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Page from "./pages/Page.jsx";
 import Home from "./pages/Home";
-import React from "react";
+import React, { useState } from "react";
+import dataContext from "./context/data.context.js";
 
 const Container = styled.div`
   display: flex;
@@ -27,23 +28,29 @@ const Wrapper = styled.div`
 `;
 
 function App() {
+  const [data, seData] = useState([]);
+  const updateData = (newValue) => {
+    seData(newValue);
+ };
   return (
     <Container>
-      <BrowserRouter>
-        <Main>
-          <Header />
-          <Wrapper>
-            <Routes>
-              <Route path="/">
-                <Route index element={<Home />} />
-                <Route path="page">
-                  <Route path=":id" element={<Page />} />
+      <dataContext.Provider value={{ data, updateData }}>
+        <BrowserRouter>
+          <Main>
+            <Header />
+            <Wrapper>
+              <Routes>
+                <Route path="/">
+                  <Route index element={<Home />} />
+                  <Route path="page">
+                    <Route path=":id" element={<Page />} />
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
-          </Wrapper>
-        </Main>
-      </BrowserRouter>
+              </Routes>
+            </Wrapper>
+          </Main>
+        </BrowserRouter>
+      </dataContext.Provider>
     </Container>
   );
 }
