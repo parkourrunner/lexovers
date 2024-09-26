@@ -1,109 +1,46 @@
-import React, { useEffect, useState, useContext } from "react";
-import styled from "styled-components";
-import Card from "../components/Card.jsx";
-import rawdata from "../data/dataMap-v2.js";
-import axios from "axios";
-import dataContext from "../context/data.context.js";
+import React, {useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Container = styled.div`
-  padding: 48px;
-`;
+import "./_Home.scss";
+import logo from "../img/logo.png";
+import SearchForm from "../components/SearchForm";
 
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  max-width: 80%;
-  margin: 0 auto;
-`;
-
-const SearchWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  position: relative;
-  box-shadow: 0 0 40px rgb(51 51 51 / 10%);
-  margin-bottom: 12px;
-`;
-
-const Input = styled.input`
-  text-align: center;
-  /* padding-left: 112px; */
-  height: 60px;
-  text-indent: 25px;
-  border: 2px solid #d6d4d4;
-  display: block;
-  width: 100%;
-  font-size: 16px;
-  font-weight: 300;
-  color: #212529;
-  background-color: #fff;
-  background-clip: padding-box;
-  border-radius: 0.25rem;
-  font-family: inherit;
-`;
-
-const ResultWrapper = styled.div`
-  display: flex;
-  max-height: 400px;
-  overflow: auto;
-  width: 100%;
-  border: 1px solid #343434;
-  border-radius: 4px;
-`;
-
-const Ul = styled.ul`
-  box-shadow: 0 0 40px rgb(51 51 51 / 10%);
-  width: 100%;
-  height: 100%;
-  padding: 8px;
-  margin: 8px;
-`;
-
-const Home = () => {
+const Home1 = () => {
   const [q, setQ] = useState("");
-  const [filtereData, setFilteredData] = useState([]);
-  const { data, updateData } = useContext(dataContext);
-  // const [data, seData] = useState([]);
-  
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchWord = async () => {
-      try {
-        let words = await axios.get("http://185.237.15.89:5000/api/words");
-        updateData(words?.data);
-      } catch (error) {
-        updateData(rawdata);
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log(q)
+    navigate(`/result`, {
+      state: {
+        searchQuery: q
       }
-    };
-    fetchWord();
-  }, []);
-
-
-  useEffect(() => {
-    const result = data?.filter(
-      (item) => item.faName.indexOf(q) !== -1 || item.ruName.indexOf(q) !== -1
-    ) || [];
-    setFilteredData(result);
-  }, [q, data]);
-
-
+    });
+  }
   return (
-    <Container>
-      <Wrapper>
-        <SearchWrapper>
-          <Input onChange={(e) => setQ(e.target.value)} placeholder="جستجو" />
-        </SearchWrapper>
-        <ResultWrapper>
-          <Ul>
-            {filtereData && filtereData.map((item) => {
-              return <Card key={item.id} item={item} />;
-            })}
-          </Ul>
-        </ResultWrapper>
-      </Wrapper>
-    </Container>
+    <>
+      <header>
+        <div className="container">
+          <div className="title">
+            <div className="title_logo">
+              <img src={logo} alt="logo" />
+              <div className="loadingCircle">
+                <div className="loader"></div>
+              </div>
+            </div>
+            <h1 className="title_russian">Русско-персидский словарь</h1>
+            <h1 className="title_persian">فرهنگ لغت روسی- فارسی</h1>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div className="container">
+          <SearchForm className="home-search-form" onSubmit={handleFormSubmit} onChange={(e) => setQ(e.target.value)} />
+        </div>
+      </main>
+    </>
   );
 };
 
-export default Home;
+export default Home1;
