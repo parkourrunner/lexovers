@@ -141,7 +141,7 @@ function Result() {
                   <h1 className="persian">{filtereData[0].faName}</h1>
                 </div>
                 <p dangerouslySetInnerHTML={{ __html: filtereData[0].description }}></p>
-                <Gallery item={filtereData[0]}/>
+                <Gallery item={filtereData[0]} />
               </> :
                 <ul className="nameList">
                   {filtereData && filtereData.map((item) =>
