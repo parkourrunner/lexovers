@@ -8,6 +8,7 @@ import wadd_cardadd_card from "../img/wadd-cardadd-card.svg";
 
 import axios from "axios";
 import rawdata from "../data/dataMap-v2.js";
+import Gallery from "../components/Gallery.jsx";
 import SearchForm from "../components/SearchForm";
 import dataContext from "../context/data.context.js";
 
@@ -139,9 +140,8 @@ function Result() {
                   <h1 className="russian">{filtereData[0].ruName}</h1>
                   <h1 className="persian">{filtereData[0].faName}</h1>
                 </div>
-                <p
-                  dangerouslySetInnerHTML={{ __html: filtereData[0].description }}
-                ></p>
+                <p dangerouslySetInnerHTML={{ __html: filtereData[0].description }}></p>
+                <Gallery item={filtereData[0]}/>
               </> :
                 <ul className="nameList">
                   {filtereData && filtereData.map((item) =>
