@@ -1,10 +1,6 @@
 import "./_Result.scss"
 import logo from "../img/logo.png";
 import vase from "../img/vase.svg";
-import wtopic from "../img/wtopic.svg";
-import wprofile from "../img/wprofile.svg";
-import wgeneral from "../img/wgeneral.svg";
-import wadd_cardadd_card from "../img/wadd-cardadd-card.svg";
 
 import axios from "axios";
 import rawdata from "../data/dataMap-v2.js";
@@ -14,6 +10,7 @@ import dataContext from "../context/data.context.js";
 
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 function Result() {
   const routerSearchQuery = useLocation().state?.searchQuery;
@@ -94,48 +91,9 @@ function Result() {
       <main>
         <div className="container">
           <div className="mainContent">
-            <div className="sidebar">
-              <ul>
-                <button>
-                  <div className="buttonDesign">
-                    <img src={wtopic} alt="topic Dictionary" />
-                  </div>
-                  <span> Тематические словари</span>
-                </button>
-                <button>
-                  <div className="buttonDesign">
-                    <img src={wtopic} alt="general Dictionary" />
-                  </div>
-                  <span>Общие словари</span>
-                </button>
-                <button>
-                  <div className="buttonDesign">
-                    <img src={wgeneral} alt="articles" />
-                  </div>
-                  <span>Статьи</span>
-                </button>
-                <button>
-                  <div className="buttonDesign">
-                    <img src={wadd_cardadd_card} alt="add cards" />
-                  </div>
-                  <span>Добавить карточки</span>
-                </button>
-                <button>
-                  <div className="buttonDesign">
-                    <img src={wtopic} alt="about" />
-                  </div>
-                  <span> О проекте</span>
-                </button>
-                <button>
-                  <div className="buttonDesign">
-                    <img src={wprofile} alt="profile" />
-                  </div>
-                  <span>Профиль</span>
-                </button>
-              </ul>
-            </div>
+            <Sidebar/>
             <div className="wordList">
-              {filtereData.length === 1 ? <>
+              {isLoading ? <div className="loader"></div> : filtereData.length === 1 ? <>
                 <div className="wordList_title">
                   <h1 className="russian">{filtereData[0].ruName}</h1>
                   <h1 className="persian">{filtereData[0].faName}</h1>
