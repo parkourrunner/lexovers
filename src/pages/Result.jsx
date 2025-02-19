@@ -29,7 +29,7 @@ function Result() {
     try {
       setIsLoading(true);
       let words = await axios.get("http://185.237.15.89:5000/api/words");
-      updateData(words?.data);
+      updateData(words?.data || []);
       setIsLoading(false);
     } catch (error) {
       updateData(rawdata);
@@ -48,7 +48,6 @@ function Result() {
   const handleItemSelect = (itemId) => {
     const result = data?.filter((item) => item.id === itemId);
     setFilteredData(result);
-    setSearchQuery("");
   };
 
   useEffect(() => {
@@ -59,6 +58,7 @@ function Result() {
       setFilteredData(result);
     } else {
       fetchWords();
+      setFilteredData(data);
     }
   }, [data]);
 
